@@ -4,6 +4,8 @@ import cors from "cors";
 import morgan from "morgan";
 import { errorHandler } from "./middlewares/globalErrorHandler";
 import { router } from "./routes";
+import { connect } from "http2";
+import { connectDB } from "./config/db";
 
 dotenv.config();
 
