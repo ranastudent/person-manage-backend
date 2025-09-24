@@ -1,26 +1,20 @@
-import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import { errorHandler } from "./middlewares/globalErrorHandler";
 import { router } from "./routes";
-import { connect } from "http2";
-import { connectDB } from "./config/db";
-
-dotenv.config();
+import { errorHandler } from "./middlewares/globalErrorHandler";
 
 const app = express();
-
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/api", router);
+app.get("/", (req, res) => res.send("Person Manager API running..."));
+app.use(errorHandler);
 
-app.get("/", (req, res) => {
-  res.send("Person Manager API is running...");
-});
-
-app.use(errorHandler)
-
-export default app;
+// ❌ Do not export the app directly
+// ✅ Export a function for Vercel serverless
+export default (req: any, res: any) => {
+  app(req, res);
+};
