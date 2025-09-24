@@ -11,6 +11,9 @@ const upload = multer({ dest: "uploads/" });
 // Get all persons (with pagination)
 router.get("/", authenticate, authorize(["admin", "user"]), personController.getAllPersons);
 
+// Group persons by category
+router.get("/group/category", authenticate, authorize(["admin", "user"]), personController.groupByCategory);
+
 // Single person by ID
 router.get("/:id", authenticate, authorize(["admin", "user"]), personController.getPersonById);
 

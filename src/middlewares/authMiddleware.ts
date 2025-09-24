@@ -25,11 +25,11 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
   }
 
   try {
-    console.log("🔑 Using JWT_SECRET:", JWT_SECRET);  // check env is loaded
-    console.log("📌 Token received:", token);
+    // console.log("🔑 Using JWT_SECRET:", JWT_SECRET);  // check env is loaded
+    // console.log("📌 Token received:", token);
 
     const decoded = jwt.verify(token, JWT_SECRET as string);
-    console.log("✅ Decoded token:", decoded);
+    // console.log("✅ Decoded token:", decoded);
 
     req.user = decoded;
     next();

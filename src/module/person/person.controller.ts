@@ -17,12 +17,27 @@ export const getAllPersons = async (req: AuthRequest, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 3;
-    const persons = await personService.getAllPersons(page, limit);
+    const search = req.query.search as string;
+    const sortBy = req.query.sortBy as string;
+    const sortOrder = (req.query.sortOrder as "asc" | "desc") || "asc";
+    const category = req.query.category as string;
+
+    const persons = await personService.getAllPersons(page, limit, search, sortBy, sortOrder, category);
     res.json({ success: true, data: persons });
   } catch (error: any) {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
+export const groupByCategory = async (req: Request, res: Response) => {
+  try {
+    const persons = await personService.groupByCategory();
+    res.json({ success: true, data: persons });
+    
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
 
 export const getPersonById = async (req: Request, res: Response) => {
   const person = await personService.getPersonById(req.params.id);

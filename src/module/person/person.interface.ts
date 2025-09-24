@@ -8,5 +8,5 @@ export interface IPerson {
   address?: string;
   category: personCategory;
   photo?: string;
- 
+  tags?: string[];
 }

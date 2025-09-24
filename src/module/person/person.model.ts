@@ -13,6 +13,7 @@ const personSchema : Schema = new Schema(
             address: {type: String, required: true},
             category: {type: String, enum: ["Friends", "Family", "Colleagues", "Unknown"], default: "Unknown"},
             photo: {type: String},
+            tags: [{ type: String }]
       },
       {timestamps: true}
 )

@@ -20,10 +20,31 @@ export const createPerson = async(payload: IPerson) => {
       return await personModel.create(payload);
 }
 
-export const getAllPersons = async(page:number=1, limit:number=3) => {
+export const getAllPersons = async(page:number=1, limit:number=3, search?: string, sortBy?: string, sortOrder: "asc" | "desc" = "asc", category?: string) => {
+      const query : any = {};
+
+      if(search) {
+            query.$or = [
+                  {name: {$regex: search, $options: "i"}},
+                  {email: {$regex: search, $options: "i"}},
+                  {phone: {$regex: search, $options: "i"}}
+            ]
+      }
+
+      if(category) {
+            query.category = category;
+      }
+
       const skip = (page - 1) * limit;
+      let sort: any = {};
+      if(sortBy) {
+            sort[sortBy] = sortOrder === "desc" ? -1 : 1;
+      }else {
+            sort = {createdAt: -1};
+      }
       const persons = await personModel
-            .find()
+            .find(query)
+            .sort(sort)
             .skip(skip)
             .limit(limit)
       const total = await personModel.countDocuments();
@@ -37,6 +58,19 @@ export const getAllPersons = async(page:number=1, limit:number=3) => {
             },
       };
 };
+
+// Group person by category
+export const groupByCategory = async() =>{
+      return await personModel.aggregate([
+            {
+                  $group: {
+                        _id: "$category",
+                        persons: {$push: "$$ROOT"},
+                        count: {$sum: 1}
+                  }
+            }
+      ]);
+}
 
 export const getPersonById = async(id: string) => {
       return await personModel.findById(id);

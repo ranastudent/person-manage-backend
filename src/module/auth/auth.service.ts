@@ -18,9 +18,7 @@ export const registerUser = async (userData: IUser) => {
 
 //login
 export const loginUser = async (email: string, password: string) => {
-  if (!JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in environment variables");
-  }
+  
   const user = await userModel.findOne({ email });
   if (!user) {
     throw new Error("User not found");
