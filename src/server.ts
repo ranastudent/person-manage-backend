@@ -31,6 +31,4 @@ const seedAdmin = async () => {
 
 connectDB(MONGO_URI).then(seedAdmin);
 
-app.listen(PORT, () => {
-  console.log(` Server running on http://localhost:${PORT}`);
-});
+
