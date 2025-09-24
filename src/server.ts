@@ -11,24 +11,27 @@ const MONGO_URI = process.env.MONGO_URI || "";
 
 const seedAdmin = async () => {
   const adminEmail = process.env.ADMIN_EMAIL;
-  const existingAdmin = await userModel.findOne({email: adminEmail});
+  if (!adminEmail) return;
 
-  if(!existingAdmin) {
+  const existingAdmin = await userModel.findOne({ email: adminEmail });
+
+  if (!existingAdmin) {
     const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD as string, 10);
     await userModel.create({
       name: "Rana",
       email: adminEmail,
       password: hashedPassword,
-      role: "admin"
+      role: "admin",
     });
-   
-
+    console.log("✅ Admin user seeded");
   }
-  
-}
+};
 
+// Connect DB → then start server
+connectDB(MONGO_URI).then(async () => {
+  await seedAdmin();
 
-
-connectDB(MONGO_URI).then(seedAdmin);
-
-
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
+  });
+});
